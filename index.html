@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#7c3aed">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Croma Tools">
+<title>Croma Tools</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎁</text></svg>">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+:root{
+  --bg:#0a0118;
+  --bg-soft:#1a0b2e;
+  --card:#1e1235;
+  --card-hi:#2a1849;
+  --border:#3d2466;
+  --text:#f3e8ff;
+  --muted:#a78bce;
+  --accent:#a855f7;
+  --accent2:#ec4899;
+  --green:#10b981;
+  --red:#ef4444;
+  --amber:#f59e0b;
+  --cyan:#06b6d4;
+  --blue:#3b82f6;
+}
+html,body{height:100%}
+body{
+  font-family:-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+  background:var(--bg);
+  background-image:
+    radial-gradient(circle at 20% 0%,rgba(168,85,247,.25),transparent 50%),
+    radial-gradient(circle at 80% 100%,rgba(236,72,153,.2),transparent 50%);
+  background-attachment:fixed;
+  color:var(--text);
+  min-height:100vh;
+  font-size:15px;
+}
+.shell{max-width:620px;margin:0 auto;padding:18px;}
+
+/* ===== HEADER ===== */
+.head{display:flex;align-items:center;gap:12px;margin-bottom:18px;padding-top:8px}
+.logo{
+  width:48px;height:48px;border-radius:14px;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  box-shadow:0 8px 24px rgba(168,85,247,.4);
+}
+.head h1{font-size:22px;font-weight:800;background:linear-gradient(90deg,#fff,#e9d5ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.head .tag{font-size:12px;color:var(--muted);margin-top:2px}
+.back{display:none;align-items:center;gap:6px;background:var(--card);color:var(--text);padding:8px 14px;border-radius:10px;border:1px solid var(--border);font-size:14px;font-weight:600;cursor:pointer;margin-right:auto}
+.back.show{display:inline-flex}
+
+/* ===== HOME TILES ===== */
+#home{display:block}
+.welcome{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:14px;text-align:center}
+.welcome .big{font-size:18px;font-weight:700;margin-bottom:4px}
+.welcome .small{font-size:12px;color:var(--muted)}
+.tile{
+  display:block;width:100%;padding:22px 18px;margin:12px 0;border-radius:18px;border:0;
+  font-size:17px;font-weight:700;text-align:left;cursor:pointer;
+  box-shadow:0 8px 28px rgba(0,0,0,.4);
+  position:relative;overflow:hidden;color:#fff;
+}
+.tile::after{content:"›";position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:34px;opacity:.6}
+.tile .emoji{font-size:36px;display:block;margin-bottom:8px}
+.tile .desc{font-size:12px;font-weight:500;opacity:.9;display:block;margin-top:6px;line-height:1.4}
+.tile-1{background:linear-gradient(135deg,#10b981,#059669)}
+.tile-2{background:linear-gradient(135deg,#a855f7,#ec4899)}
+.tile:active{transform:scale(.98)}
+
+/* ===== SECTIONS ===== */
+.section{display:none}
+.section.active{display:block}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px}
+.section h2{font-size:18px;color:#fff;margin-bottom:6px}
+.sub{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.4}
+textarea{
+  width:100%;min-height:140px;padding:12px;border-radius:12px;
+  border:1px solid var(--border);background:var(--bg-soft);color:var(--text);
+  font-size:14px;font-family:ui-monospace,monospace;resize:vertical;
+}
+textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(168,85,247,.2)}
+.row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+button.btn{flex:1;min-width:120px;padding:12px 8px;border:0;border-radius:11px;font-size:13px;font-weight:700;cursor:pointer;color:#fff;transition:transform .1s}
+button.btn:active{transform:scale(.96)}
+.big{padding:16px;font-size:15px}
+.b-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff}
+.b-green{background:var(--green);color:#fff}
+.b-amber{background:var(--amber);color:#1c1917}
+.b-cyan{background:var(--cyan);color:#062a30}
+.b-blue{background:var(--blue);color:#fff}
+.b-red{background:var(--red);color:#fff}
+.b-purple{background:#7c3aed;color:#fff}
+.b-wa{background:#25d366;color:#fff}
+
+/* ===== TABLE ===== */
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:13px}
+th,td{border-bottom:1px solid var(--border);padding:9px 6px;text-align:left;font-family:ui-monospace,monospace;word-break:break-all}
+th{background:var(--bg-soft);color:var(--accent);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+td{background:transparent}
+tr:hover td{background:var(--card-hi)}
+td.bad{color:#fca5a5}
+.zero{color:#f87171;font-weight:700}.ok{color:#4ade80;font-weight:700}
+
+/* ===== MISC ===== */
+.count{font-size:13px;color:var(--muted);margin-top:10px;font-weight:600}
+.hint{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;opacity:.8}
+#debug{background:var(--bg-soft);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:10px;font-family:ui-monospace,monospace;font-size:12px;white-space:pre-wrap;word-break:break-all;display:none;color:#fbbf24;max-height:300px;overflow:auto}
+.bar{height:8px;background:var(--bg-soft);border-radius:4px;overflow:hidden;margin-top:12px;border:1px solid var(--border)}
+.bar>div{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));width:0;transition:.2s}
+
+/* Stat Filter Boxes */
+.stat{display:flex;gap:6px;margin-top:12px;font-size:11px}
+.stat>div{flex:1;background:var(--bg-soft);padding:8px 4px;border-radius:10px;text-align:center;border:1px solid var(--border);cursor:pointer;transition:all .15s}
+.stat>div:hover{background:var(--card-hi)}
+.stat>div.active-filter{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent);background:var(--card-hi)}
+.stat b{display:block;font-size:16px;color:#fff;margin-top:2px}
+
+.filter-badge{display:none;align-items:center;justify-content:space-between;background:var(--card-hi);border:1px solid var(--border);padding:8px 12px;border-radius:8px;margin-top:10px;font-size:12px}
+.filter-badge button{background:transparent;border:0;color:var(--accent2);cursor:pointer;font-weight:700}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 20px;border-radius:10px;font-weight:700;opacity:0;transition:opacity .25s;pointer-events:none;z-index:99;font-size:14px;box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.toast.show{opacity:1}
+.foot{text-align:center;font-size:11px;color:var(--muted);opacity:.6;padding:24px 0 12px}
+.pulse{animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ===== HEADER ===== -->
+<div class="head">
+  <button class="back" id="backBtn" onclick="showHome()">←</button>
+  <div class="logo">🎁</div>
+  <button class="back" id="installBtn" style="display:none;margin-left:auto;background:linear-gradient(135deg,#10b981,#059669);color:#fff;border:0" onclick="installApp()">📲 Install App</button>
+  <div>
+    <h1>Croma Tools</h1>
+    <div class="tag">All-in-one gift card toolkit</div>
+  </div>
+</div>
+
+<!-- ===== HOME ===== -->
+<div id="home">
+  <div class="welcome">
+    <div class="big">👋 Welcome To Kartik Tool'S</div>
+    <div class="small">Choose a tool to get started</div>
+  </div>
+
+  <button class="tile tile-1" onclick="show('formatter')">
+    <span class="emoji">✨</span>
+    Format Setter
+    <span class="desc">Paste messy SMS/emails — get clean Card numbers + PINs ready for Google Sheets</span>
+  </button>
+
+  <button class="tile tile-2" onclick="show('checker')">
+    <span class="emoji">💰</span>
+    Balance Checker
+    <span class="desc">Check balances, filter results on tap, and copy with 3 clean one-click options!</span>
+  </button>
+
+  <div class="foot">v3.4 · 🎁 Croma Tools</div>
+</div>
+
+<!-- ===== FORMATTER ===== -->
+<div class="section" id="formatter">
+  <div class="card">
+    <h2>✨ Format Setter</h2>
+    <div class="sub">Paste anything → ek tap → Sheets me paste karo. Card &amp; PIN alag column me jayenge.</div>
+    <textarea id="fInput" placeholder="Jitne bhi cards ho ek saath paste kar de..."></textarea>
+    <div class="hint">Tip: Koi bhi format chalega — tool digits dekh ke 16+6 nikalega.</div>
+    <div class="row">
+      <button class="btn b-primary big" onclick="fExtractAndCopy()">⚡ Extract &amp; Copy for Sheets</button>
+    </div>
+    <div class="row">
+      <button class="btn b-amber" onclick="fCopyCards()">🎴 All Cards</button>
+      <button class="btn b-cyan" onclick="fCopyPins()">🔑 All PINs</button>
+    </div>
+    <div class="row">
+      <button class="btn b-blue" onclick="fExtractOnly()">👁 Preview</button>
+      <button class="btn b-purple" onclick="fShowDebug()">🐛 Debug</button>
+      <button class="btn b-red" onclick="fClear()">🗑 Clear</button>
+    </div>
+  </div>
+  <div class="count" id="fCount"></div>
+  <table id="fOut" style="display:none">
+    <thead><tr><th>#</th><th>Card (16)</th><th>PIN (6)</th></tr></thead>
+    <tbody></tbody>
+  </table>
+  <div id="debug"></div>
+</div>
+
+<!-- ===== CHECKER ===== -->
+<div class="section" id="checker">
+  <div class="card">
+    <h2>💰 Balance Checker</h2>
+    <div class="sub">Paste Cards or SMS/Text (Card + PIN pair auto detect ho jayenge).</div>
+    <textarea id="cards" placeholder="Paste cards (with or without PINs) here...&#10;1001340043075899 123456&#10;1001340040344056	654321"></textarea>
+    
+    <div class="row" id="cMainButtons">
+      <button class="btn b-primary big" id="checkBtn" onclick="cRun()">🔍 Check Balance</button>
+    </div>
+
+    <div class="bar"><div id="prog"></div></div>
+    <div id="cStatus" style="margin-top:8px;font-size:13px;color:var(--muted)"></div>
+    
+    <div id="totalBox" style="display:none;margin-top:14px;padding:16px;border-radius:14px;background:linear-gradient(135deg,#10b981,#059669);color:#fff;text-align:center;box-shadow:0 8px 24px rgba(16,185,129,.35)">
+      <div style="font-size:12px;opacity:.9;font-weight:600;letter-spacing:.5px;text-transform:uppercase">💰 Total Worth</div>
+      <div id="totalAmt" style="font-size:28px;font-weight:900;margin-top:4px">₹0</div>
+    </div>
+    
+    <!-- Interactive Filter Stat Cards -->
+    <div class="stat" id="stats" style="display:none">
+      <div id="st_all" onclick="applyFilter('all')" title="Show All">Total<br><b id="t">0</b></div>
+      <div id="st_zero" onclick="applyFilter('zero')" title="Show ₹0 Cards">₹0 Cards<br><b id="z">0</b></div>
+      <div id="st_nz" onclick="applyFilter('nz')" title="Show Cards with Balance">With Bal<br><b id="nz">0</b></div>
+      <div id="st_iv" onclick="applyFilter('iv')" title="Show Invalid Cards">Invalid<br><b id="iv">0</b></div>
+      <div id="st_dup" onclick="applyFilter('dup')" title="Show Duplicates">Dup<br><b id="dup">0</b></div>
+    </div>
+
+    <!-- Active Filter Info -->
+    <div class="filter-badge" id="filterBadge">
+      <span id="filterLabel">Showing all cards</span>
+      <button onclick="applyFilter('all')">✕ Reset Filter</button>
+    </div>
+
+    <!-- Clean 3 Copy Action Options -->
+    <div id="cActions" style="display:none;margin-top:12px;flex-direction:column;gap:8px">
+      <div class="row">
+        <button class="btn b-primary" style="flex:100%;padding:14px;font-size:14px" onclick="cCopyAllWithBal()">📋 Copy All Gift Cards With Balance &amp; PIN</button>
+      </div>
+      <div class="row">
+        <button class="btn b-green" onclick="cCopyOnlyBalanceCards()">💰 Copy Only Balance Gift Cards</button>
+        <button class="btn b-amber" onclick="cCopyAllCardsOnly()">🎴 Copy All</button>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button class="btn b-purple" onclick="cDownload()">⬇ CSV</button>
+        <button class="btn b-wa" onclick="cShareWA()">📱 WhatsApp</button>
+        <button class="btn b-red" onclick="cClear()">🗑 Clear All</button>
+      </div>
+    </div>
+  </div>
+
+  <table id="cTbl" style="display:none">
+    <thead><tr><th>#</th><th>Card (16)</th><th>PIN (6)</th><th>Balance</th></tr></thead>
+    <tbody id="cTb"></tbody>
+  </table>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const CHECK_API = "/api/check";
+const CONCURRENCY = 200;
+
+/* ===== Navigation ===== */
+function show(id){
+  document.getElementById('home').style.display='none';
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('backBtn').classList.add('show');
+  history.pushState({view:id},'','#'+id);
+  window.scrollTo(0,0);
+}
+function showHome(){
+  document.getElementById('home').style.display='block';
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.getElementById('backBtn').classList.remove('show');
+  history.replaceState({view:'home'},'','#home');
+  window.scrollTo(0,0);
+}
+window.addEventListener('popstate',()=>{
+  const h=location.hash.slice(1);
+  if(h==='formatter'||h==='checker') show(h); else showHome();
+});
+const initHash=location.hash.slice(1);
+if(initHash==='formatter'||initHash==='checker') show(initHash); else showHome();
+
+/* ===== Toast & Copy ===== */
+function toast(msg,color){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.background=color||'var(--green)';
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt=setTimeout(()=>t.classList.remove('show'),2200);
+}
+function doCopy(text,msg){
+  if(navigator.clipboard&&window.isSecureContext){
+    navigator.clipboard.writeText(text).then(()=>toast(msg,'var(--green)'),()=>fb(text,msg));
+  } else fb(text,msg);
+}
+function fb(text,msg){
+  const ta=document.createElement('textarea');
+  ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.focus();ta.select();
+  try{document.execCommand('copy');toast(msg,'var(--green)');}
+  catch(e){toast('Copy failed','var(--red)');}
+  ta.remove();
+}
+
+/* ===== SHARED EXTRACTOR HELPER ===== */
+function parseCardsAndPins(raw){
+  const n=raw.replace(/[^0-9]+/g,' ').trim();
+  if(!n) return [];
+  const runs = n.split(' ').filter(Boolean).map(s=>({pure:s,len:s.length}));
+  const exp=[];
+  for(const r of runs){
+    if(r.len===22){
+      exp.push({pure:r.pure.slice(0,16),len:16});
+      exp.push({pure:r.pure.slice(16),len:6});
+    } else {
+      exp.push(r);
+    }
+  }
+  const pairs=[]; let pc=null;
+  for(const r of exp){
+    if(r.len===16){
+      if(pc) pairs.push({card:pc,pin:''});
+      pc=r.pure;
+    } else if(r.len===6){
+      if(pc){ pairs.push({card:pc,pin:r.pure}); pc=null; }
+      else pairs.push({card:'',pin:r.pure});
+    }
+  }
+  if(pc) pairs.push({card:pc,pin:''});
+  return pairs;
+}
+
+/* ===== FORMATTER ===== */
+let fResults=[];
+function fExtract(){
+  const raw=document.getElementById('fInput').value;
+  if(!raw.trim()){toast('Paste something first','var(--red)');return false;}
+  fResults = parseCardsAndPins(raw);
+  fRender();
+  return fResults.length>0;
+}
+function fExtractOnly(){if(fExtract()) toast(`Found ${fResults.length} card(s)`); else toast('Nothing matched — tap 🐛 Debug','var(--red)');}
+function fExtractAndCopy(){
+  if(!fExtract()){toast('Nothing matched — tap 🐛 Debug','var(--red)');return;}
+  doCopy(fResults.map(r=>`${r.card}\t${r.pin}`).join('\n'),`✅ ${fResults.length} card(s) copied for Sheets`);
+}
+function fCopyCards(){
+  if(!fResults.length){if(!fExtract())return;}
+  const c=fResults.filter(r=>r.card).map(r=>r.card);
+  if(!c.length){toast('No cards','var(--red)');return;}
+  doCopy(c.join('\n'),`🎴 ${c.length} card(s) copied`);
+}
+function fCopyPins(){
+  if(!fResults.length){if(!fExtract())return;}
+  const p=fResults.filter(r=>r.pin).map(r=>r.pin);
+  if(!p.length){toast('No PINs','var(--red)');return;}
+  doCopy(p.join('\n'),`🔑 ${p.length} PIN(s) copied`);
+}
+function fShowDebug(){
+  const raw=document.getElementById('fInput').value;
+  const n=raw.replace(/[^0-9]+/g,' ').trim();
+  const runs = n ? n.split(' ').filter(Boolean).map(s=>({pure:s,len:s.length})) : [];
+  const dbg=document.getElementById('debug');
+  let out=`INPUT LENGTH: ${raw.length} chars\nDIGIT RUNS FOUND: ${runs.length}\n\n`;
+  if(!runs.length) out+='(no digits found)\n';
+  runs.forEach((r,i)=>{out+=`${i+1}. len=${r.len}  →  ${r.pure}\n`;});
+  out+=`\n— Looking for runs of length 16 (card) and 6 (pin).\n`;
+  dbg.textContent=out;dbg.style.display='block';
+}
+function fRender(){
+  const tb=document.querySelector('#fOut tbody');tb.innerHTML='';
+  fResults.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    const c=r.card?`<td>${r.card}</td>`:`<td class="bad">missing</td>`;
+    const p=r.pin?`<td>${r.pin}</td>`:`<td class="bad">missing</td>`;
+    tr.innerHTML=`<td>${i+1}</td>${c}${p}`;tb.appendChild(tr);
+  });
+  document.getElementById('fOut').style.display=fResults.length?'table':'none';
+  document.getElementById('fCount').textContent=fResults.length?`${fResults.length} row(s) ready`:'';
+}
+function fClear(){
+  document.getElementById('fInput').value='';
+  localStorage.removeItem('croma_last');
+  fResults=[];fRender();
+  document.getElementById('debug').style.display='none';
+  toast('Cleared','var(--blue)');
+}
+const fIp=document.getElementById('fInput');
+fIp.value=localStorage.getItem('croma_last')||'';
+fIp.addEventListener('input',()=>localStorage.setItem('croma_last',fIp.value));
+
+/* ===== CHECKER ENGINE ===== */
+let cResults = [];
+let dupSet = new Set();
+let isRunning = false;
+let currentFilter = 'all';
+
+async function cCheck(card){
+  try{
+    const r = await fetch(CHECK_API,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({card})
+    });
+    const data = await r.json();
+    if(data && (data.balance !== undefined || data.status !== undefined || data.expiry !== undefined)){
+      return data;
+    }
+    return {card, _retry: true};
+  }catch(e){
+    return {card, _retry: true};
+  }
+}
+
+async function runWithConcurrency(cards, maxConcurrent, onResult){
+  let nextIdx = 0;
+  async function worker(){
+    while(nextIdx < cards.length){
+      const idx = nextIdx++;
+      const res = await cCheck(cards[idx]);
+      onResult(res, idx);
+    }
+  }
+  const workers = [];
+  for(let i = 0; i < Math.min(maxConcurrent, cards.length); i++) workers.push(worker());
+  await Promise.all(workers);
+}
+
+function isResolved(r){
+  if(r._retry) return false;
+  if(r.error !== undefined) return false;
+  return true;
+}
+
+function applyFilter(type){
+  currentFilter = type;
+  document.querySelectorAll('.stat > div').forEach(el=>el.classList.remove('active-filter'));
+  const filterBadge = document.getElementById('filterBadge');
+  const filterLabel = document.getElementById('filterLabel');
+
+  if(type === 'all'){
+    document.getElementById('st_all').classList.add('active-filter');
+    filterBadge.style.display = 'none';
+  } else {
+    document.getElementById('st_' + type).classList.add('active-filter');
+    filterBadge.style.display = 'flex';
+    if(type === 'zero') filterLabel.textContent = 'Filtered: Only ₹0 Cards';
+    else if(type === 'nz') filterLabel.textContent = 'Filtered: Cards With Balance';
+    else if(type === 'iv') filterLabel.textContent = 'Filtered: Invalid Cards';
+    else if(type === 'dup') filterLabel.textContent = 'Filtered: Duplicate Cards';
+  }
+  renderTable();
+}
+
+function renderTable(){
+  const tb = document.getElementById('cTb');
+  tb.innerHTML = '';
+  let zero=0, nz=0, iv=0, totalAmt=0, pending=0;
+
+  cResults.forEach((r)=>{
+    const invalid = isResolved(r) && (r.status == null && r.expiry == null && r.balance === undefined);
+    if(!isResolved(r)){
+      pending++;
+    } else if(invalid){
+      r.invalid = true;
+      iv++;
+    } else {
+      const bal = r.balance;
+      if(bal === 0) zero++;
+      else if(bal > 0){ nz++; totalAmt += bal; }
+    }
+  });
+
+  let rowIdx = 0;
+  cResults.forEach((r)=>{
+    const isDup = dupSet.has(r.card);
+    const invalid = isResolved(r) && (r.status == null && r.expiry == null && r.balance === undefined);
+    const bal = r.balance;
+
+    if(currentFilter === 'zero' && !(isResolved(r) && bal === 0 && !invalid)) return;
+    if(currentFilter === 'nz' && !(isResolved(r) && bal > 0 && !invalid)) return;
+    if(currentFilter === 'iv' && !(isResolved(r) && invalid)) return;
+    if(currentFilter === 'dup' && !isDup) return;
+
+    rowIdx++;
+    let cell;
+    if(!isResolved(r)){
+      cell = `<td class="bad pulse">🔄 Retrying…</td>`;
+    } else if(invalid){
+      cell = `<td class="bad">❌ Invalid</td>`;
+    } else {
+      cell = `<td class="${bal > 0 ? 'ok' : 'zero'}">${bal !== undefined ? '₹'+bal.toLocaleString('en-IN') : 'ERR'}</td>`;
+    }
+
+    const tr = document.createElement('tr');
+    const dupBadge = isDup ? ` <span style="background:#f59e0b;color:#1c1917;padding:1px 5px;border-radius:6px;font-size:9px;font-weight:800">DUP</span>` : '';
+    const pinDisplay = r.pin ? r.pin : '<span style="color:var(--muted)">—</span>';
+    tr.innerHTML = `<td>${rowIdx}</td><td>${r.card}${dupBadge}</td><td>${pinDisplay}</td>${cell}`;
+    tb.appendChild(tr);
+  });
+
+  document.getElementById('t').textContent = cResults.length;
+  document.getElementById('z').textContent = zero;
+  document.getElementById('nz').textContent = nz;
+  document.getElementById('iv').textContent = iv;
+  document.getElementById('totalAmt').textContent = '₹'+totalAmt.toLocaleString('en-IN');
+
+  return {zero, nz, iv, totalAmt, pending};
+}
+
+async function cRun(){
+  if(isRunning) return;
+  const raw = document.getElementById('cards').value;
+  const pairs = parseCardsAndPins(raw).filter(p => p.card);
+
+  if(!pairs.length){
+    toast('No 16-digit card numbers found','var(--red)');
+    return;
+  }
+
+  const seen = {}; dupSet.clear();
+  pairs.forEach(p => {
+    seen[p.card] = (seen[p.card] || 0) + 1;
+    if(seen[p.card] > 1) dupSet.add(p.card);
+  });
+
+  const uniqueMap = new Map();
+  pairs.forEach(p => {
+    if(!uniqueMap.has(p.card)){
+      uniqueMap.set(p.card, p.pin || '');
+    }
+  });
+
+  const dupCount = dupSet.size;
+  if(dupCount > 0) toast(`⚠️ ${dupCount} duplicate card(s) skipped`,'var(--amber)');
+
+  cResults = Array.from(uniqueMap.entries()).map(([card, pin]) => ({
+    card,
+    pin,
+    _retry: true
+  }));
+
+  currentFilter = 'all';
+  document.querySelectorAll('.stat > div').forEach(el=>el.classList.remove('active-filter'));
+  document.getElementById('st_all').classList.add('active-filter');
+  document.getElementById('filterBadge').style.display = 'none';
+
+  document.getElementById('cTbl').style.display = 'table';
+  document.getElementById('stats').style.display = 'flex';
+  document.getElementById('totalBox').style.display = 'block';
+  document.getElementById('cActions').style.display = 'none';
+  document.getElementById('dup').textContent = dupCount;
+
+  isRunning = true;
+  document.getElementById('checkBtn').disabled = true;
+
+  let round = 0;
+
+  while(true){
+    round++;
+    const targets = cResults.filter(r => !isResolved(r)).map(r => r.card);
+    if(targets.length === 0) break;
+
+    let done = 0;
+    const total = targets.length;
+    document.getElementById('prog').style.width = '0%';
+
+    const label = round === 1 ? 'Checking' : `Retrying (Round ${round})`;
+    document.getElementById('cStatus').textContent = `${label}: 0/${total}…`;
+
+    await runWithConcurrency(targets, CONCURRENCY, (res)=>{
+      const idx = cResults.findIndex(r => r.card === res.card);
+      if(idx !== -1){
+        const savedPin = cResults[idx].pin;
+        cResults[idx] = Object.assign({}, res, { pin: savedPin });
+      }
+      done++;
+      document.getElementById('prog').style.width = (done/total*100)+'%';
+      document.getElementById('cStatus').textContent = `${label}: ${done}/${total}`;
+      if(done % 40 === 0 || done === total) renderTable();
+    });
+
+    await new Promise(res => setTimeout(res, 200));
+  }
+
+  const {totalAmt} = renderTable();
+  isRunning = false;
+  document.getElementById('checkBtn').disabled = false;
+  document.getElementById('cActions').style.display = 'flex';
+  document.getElementById('prog').style.width = '100%';
+  document.getElementById('cStatus').textContent = `✅ All ${cResults.length} cards done · ₹${totalAmt.toLocaleString('en-IN')} total`;
+  toast(`✅ ${cResults.length} cards checked · ₹${totalAmt.toLocaleString('en-IN')} total`);
+}
+
+/* ===== 3 CLEAN COPY OPTIONS ===== */
+
+// Option 1: Copy All Gift Cards With Balance & PIN
+function cCopyAllWithBal(){
+  if(!cResults.length){ toast('No cards checked yet','var(--red)'); return; }
+  const text = cResults.map(r => {
+    const balText = r.invalid ? 'Invalid' : (r.balance !== undefined ? `₹${r.balance}` : 'ERR');
+    return `${r.card}\t${r.pin || ''}\t${balText}`;
+  }).join('\n');
+  doCopy(text, `📋 Copied All ${cResults.length} Cards with Balance & PIN`);
+}
+
+// Option 2: Copy Only Balance Gift Cards (Cards with balance > 0 + PIN)
+function cCopyOnlyBalanceCards(){
+  const valid = cResults.filter(r => r.balance && r.balance > 0);
+  if(!valid.length){ toast('No cards with positive balance','var(--red)'); return; }
+  const text = valid.map(r => `${r.card}\t${r.pin || ''}`).join('\n');
+  doCopy(text, `💰 Copied ${valid.length} Balance Cards + PIN`);
+}
+
+// Option 3: Copy All (Card + PIN only)
+function cCopyAllCardsOnly(){
+  if(!cResults.length){ toast('No cards checked yet','var(--red)'); return; }
+  const text = cResults.map(r => `${r.card}\t${r.pin || ''}`).join('\n');
+  doCopy(text, `🎴 Copied All ${cResults.length} Cards + PIN`);
+}
+
+function cDownload(){
+  let csv = 'Sr No,Gift Card No,PIN,Balance,Status\n';
+  cResults.forEach((r,i)=>{
+    const bal = r.balance !== undefined ? r.balance : '';
+    const stat = r.invalid ? 'Invalid' : (r.balance !== undefined ? 'OK' : 'Error');
+    csv += `${i+1},${r.card},${r.pin || ''},${bal},${stat}\n`;
+  });
+  const blob = new Blob([csv],{type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'croma_giftcard_balances.csv';
+  a.click();
+  toast('CSV downloaded');
+}
+
+function cShareWA(){
+  let txt = `*Croma Gift Card Balances* (${cResults.length} cards)\n\n`;
+  cResults.forEach((r,i)=>{
+    const pinPart = r.pin ? ` (PIN: ${r.pin})` : '';
+    const balPart = r.invalid ? 'Invalid' : (r.balance !== undefined ? `₹${r.balance}` : 'ERR');
+    txt += `${i+1}. ${r.card}${pinPart} — ${balPart}\n`;
+  });
+  if(txt.length > 4000) txt = txt.slice(0,3900)+'\n...(truncated, use CSV)';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+
+function cClear(){
+  if(!confirm('Clear all data and start fresh?')) return;
+  cResults = [];
+  dupSet.clear();
+  currentFilter = 'all';
+  document.getElementById('cards').value = '';
+  document.getElementById('cTb').innerHTML = '';
+  document.getElementById('cTbl').style.display = 'none';
+  document.getElementById('stats').style.display = 'none';
+  document.getElementById('totalBox').style.display = 'none';
+  document.getElementById('cActions').style.display = 'none';
+  document.getElementById('filterBadge').style.display = 'none';
+  
+  document.getElementById('prog').style.width = '0';
+  document.getElementById('cStatus').textContent = '';
+  document.getElementById('t').textContent = '0';
+  document.getElementById('z').textContent = '0';
+  document.getElementById('nz').textContent = '0';
+  document.getElementById('iv').textContent = '0';
+  document.getElementById('dup').textContent = '0';
+  document.getElementById('totalAmt').textContent = '₹0';
+  window.scrollTo(0,0);
+  toast('Cleared','var(--blue)');
+}
+</script>
+<script>
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+}
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  const b=document.getElementById('installBtn');if(b)b.style.display='inline-flex';
+});
+function installApp(){
+  if(deferredPrompt){deferredPrompt.prompt();deferredPrompt.userChoice.then(()=>{deferredPrompt=null;document.getElementById('installBtn').style.display='none';});}
+  else toast('Use browser menu → Add to Home Screen','var(--blue)');
+}
+</script>
+</body>
+</html>
